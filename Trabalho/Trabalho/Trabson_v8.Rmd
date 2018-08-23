@@ -1,0 +1,340 @@
+---
+title: "Manipulação De Strings"
+subtitle: "Métodos Computacionais Para Estatística II"
+author: 
+- name: Daniel dos Santos
+- name: Larissa Estudante
+- name: Natan Vaz
+- name: Rodrigo Trindade
+- name: Simone Galdino
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  prettydoc::html_pretty: null
+  highlight: github
+  theme: cayman
+---
+<style>
+p    {text-align: justify;
+      text-justify: inter-word;}
+</style>
+
+# Manipulação de Strings
+
+## O que são strings?
+Strings são objetos formados por caracteres ou uma cadeia de caracteres, sendo estes: palavras, frases ou textos.
+
+## Motivação
+No registro de um banco de dados muitas vezes podem ocorrer erros, principalmente quando se trata de variáveis compostas por uma ou mais palavras. A falta de padronização é um deles e acontece devido a diversos fatores como, por exemplo, um grande número de pessoas que preenche um mesmo formulário causando divergências na forma de escrever uma palavra específica.
+
+## Pacotes que utilizaremos
+`stringr` e `glue`.
+
+## História do stringr
+Criado por Hadley Wickham, o pacote stringr pertence ao tidyverse e teve como sua primeira versão o pacote stringi.
+
+# Instalação e Utilização (stringr)
+
+## Instalação stringr
+O stringr está hospedado no CRAN. Podemos instalá-lo e ativá-lo com o seguinte comando:
+
+```{r,message = F, warning = F}
+#install.packages("stringr")
+require(stringr)
+```
+
+Por pertencer ao tidyverse, podemos fazer a instalação da seguinte maneira (não funciona no linux):
+
+```{r, message = F, warning = F}
+#install.packages("tidyverse")
+require(tidyverse)
+```
+
+## Utilização
+As funções do pacote stringr são vetorizadas e começam com `str_`.
+
+### Comandos
+
+#### str_c()
+A função `str_c()` serve para concatenar strings.
+
+```{r}
+string <- "são municípios do Rio"
+str_c("Nova Iguaçu,","Niterói,", "Rio de Janeiro", string, sep = " ")
+```
+
+Também podemos utilizá-la com vetores.
+
+```{r}
+string1 <- c("Larissa","Rodrigo")
+string2 <- c("brigadeiro","hamburguer")
+str_c(string1, " adora comer ", string2,".")
+```
+
+#### str_length() x length()
+
+`str_length()` retorna a quantidade de caracteres por elemento do vetor, diferente da função `length()`, que retorna o tamanho do vetor. Por exemplo:
+
+```{r}
+frutas <-c("Banana","Tangerina","Morango","Acerola")
+length(frutas)
+str_length(frutas)
+```
+
+#### str_to_lower(), str_to_upper() e str_to_title()
+As funções `str_to_lower()`, `str_to_upper()` e `str_to_title()` transformam toda a string em letra minúscula, maiúscula ou título, respectivamente.
+
+```{r}
+string <- "EleIçõEs: JonY paRA ProfeSsor de Prob 2!"
+str_to_lower(string)
+str_to_upper(string)
+str_to_title(string)
+```
+#### str_trim()
+A função `str_trim()` elimina espaços vazios da string.
+
+```{r}
+sexo <- c("M", "F", "F", " M", " F ", "M","  M "," F ")
+as.factor(sexo)
+```
+
+```{r}
+sexo <- str_trim(sexo)
+as.factor(sexo)
+```
+
+#### str_split()
+A função `str_split()` separam a string de acordo com o separador.
+```{r}
+animais <- "macaco-tigre-cão-boi-porco-rato"
+str_split(animais, "-")
+```
+```{r}
+class(str_split(animais, "-"))
+```
+
+Perceba que a classe do objeto gerado pelo `str_split()` é uma lista. Se quisermos que a função retorne uma matriz, devemos usar o argumento `simplify = TRUE` (tem como default `FALSE`).
+
+```{r}
+animais <- "macaco-tigre-cão-boi-porco-rato"
+str_split(animais, "-", simplify = T)
+```
+
+
+#### str_sub()
+A função `str_sub()` extrai partes da string.  
+Extrair uma substring a partir do 4° caractere:
+
+```{r}
+nomes <- c("01-Natan", "02-Simone", "03-Daniel")
+str_sub(nomes, start = 4)
+```
+
+Extrair uma substring até o 2° caractere:
+
+```{r}
+str_sub(nomes, end = 2)
+```
+
+Extrair uma substring sem os 6 últimos caracteres.
+
+```{r}
+sexo <- c("Feminino (01)","Masculino (02)", "Indefinido (03)")
+str_sub(sexo, end = -6)
+```
+
+Extrair uma substring com os 4 últimos caracteres.
+
+```{r}
+str_sub(sexo,start = -4)
+```
+
+```{r}
+
+```
+
+#### str_detect()
+A função `str_detect()` retorna `TRUE`, se existir algum padrão dentro da string, ou `FALSE`, caso contrário. 
+
+```{r}
+str_detect("rio de janeiro", pattern = "janeiro$")
+str_detect("rio de janeiro rj", pattern = "janeiro$")
+```
+
+#### Regex
+Regex, ou Expressões Regulares (*Regular Expressions*), é um conjunto de expressões que serve para identificar padrões em caracteres (ou cadeia de caracteres) de interesse.
+
+A tabela abaixo mostra a aplicação de cinco regex em seis strings distintas.
+
+* ’^dade’ reconhece apenas o que começam exatamente com “dade”.
+* ‘da?de’ reconhece tudo que tenha “dade”, com ou sem espaço entre o “da” e o “de”.
+* ‘dade’ reconhece tudo que tenha “dade”, mas não ignora case.
+* DADE’ reconhece tudo que tenha “DADE”, mas não ignora case.
+* ‘dade$’ reconhece apenas o que termina exatamente em “dade”
+
+|    strings    | ^dade | da?de |  dade |  DADE | dade$ |
+|:-------------:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| probabilidade | FALSE | TRUE  | TRUE  | FALSE | TRUE  |
+| PROBABILIDADE | FALSE | FALSE | FALSE | TRUE  | FALSE |
+|    cidades    | FALSE | TRUE  | TRUE  | FALSE | FALSE |
+|  cada dente   | FALSE | TRUE  | FALSE | FALSE | FALSE |
+|   dadedoo     | TRUE  | TRUE  | TRUE  | FALSE | FALSE |
+|   dade        | TRUE  | TRUE  | TRUE  | FALSE | TRUE  |
+
+[Clique aqui para saber mais sobre Regex](http://www.gagolewski.com/software/stringi/manual/?manpage=stringi-search-regex).
+
+#### str_replace() e str_replace_all()
+
+A função `str_replace()` substitui o primeiro caractere pelo escolhido.
+```{r}
+material <- c("Caneta 1","Lápis 2", "Tesoura 3", "Estojo 1")
+str_replace(material,"[0-9]","Azul")
+```
+
+A função `str_replace_all()` substitui todos caracteres pelo escolhido.
+
+```{r}
+comida <- c("a pizza", "a lasanha", "o strogonoff","hamburguer")
+str_replace_all(comida, "[aeiou]", "+") 
+```
+
+## Cheat Sheets
+Pensando na grande quantidade de pacotes que o R possui, podemos encontrar no site do RStudio alguns Cheat Sheets, uma espécie de *“colinha”* para os principais pacotes utilizados no R. Veja o Cheat Sheet para o pacote `stringr` [clicando aqui](http://edrub.in/CheatSheets/cheatSheetStringr.pdf).  
+Para a lista de todos o Cheat Sheets para os demais pacotes [clique aqui](https://www.rstudio.com/resources/cheatsheets/).
+
+## Instalação e utlização (glue)
+
+```{r,message = F, warning = F}
+#install.packages("glue")
+require(glue)
+```
+
+O pacote `glue` é novo e apareceu pela primeira vez no Git-Hub em dezembro de 2016. Assim como `stringr`, o `glue` serve para interpolar dados,colar pequenos textos e concatenar.  
+
+Função `glue()`:
+
+```{r}
+NOME <- "Ana"
+CIDADE <- "Niterói"
+IDADE <- 30
+NIVER <- "Abril"
+glue("Meu nome é {NOME}, minha cidade atual é {CIDADE}, tenho {IDADE} anos meu aniversário é em {NIVER}")
+```
+
+## Exercício
+
+<center><big>**Detetive R**</big></center>
+
+<center>![alt text](C:\\Users\\Danie\\OneDrive\\IPC\\Estudos\\Metodos Com. Est. II\\Trabalho\\Trabalho\\detetiversmall.png "DetetiveR")</center>
+
+Era para ser uma noite como outra qualquer, mas dessa vez você havia sido chamado para ajudar uma equipe a resolver um mistério. A mansão Snedecor era a maior da rua e havia sido o cenário de um crime naquela manhã. A equipe investigativa me contou que o dono da mansão foi assassinado no início do dia, e hoje o seu trabalho era ajudar a descobrir quem era o assassino. Na mansão vivia o milionário Paulo, sua esposa Antonela e mais uma equipe de funcionários, que incluía o mordomo Alfredo e o motorista da família, Júlio. Os últimos citados são os principais suspeitos, entretanto as pistas do real culpado estavam confusas e corrompidas, de alguma forma, por isso precisam de você, um estatístico promissor, para ajudá-los a descobrir o que está errado. Mas, cuidado para não errar seus códigos e fazê-los prender a pessoa errada, deixando o verdadeiro assassino a solta. A moderna sala de jantar foi transformada em uma sala de reuniões e ao chegar lá, você recebe um dossiê com as pistas encontradas pela perícia. Suspeitos: 
+
+********************************************************************************************************************************
+Antonela Snedecor  
+62 anos  
+Esposa de Paulo Snedecor  
+CPF: **140.369.710-11**  
+RG: **55.579.021-1**
+
+********************************************************************************************************************************
+Alfredo Santos  
+57 anos  
+Mordomo da mansão  
+CPF: **924.385.622-53**  
+RG: **59.663.198-7**  
+
+********************************************************************************************************************************
+Júlio Silva  
+42 anos  
+Motorista da família Snedecor  
+CPF: **243.762.893-51**  
+RG: **32.243.321-6**  
+
+********************************************************************************************************************************
+
+O policial Bob te contou que o escritório pessoal do milionário, apesar de não ser a cena do crime, continha pistas e, curiosamente, digitais da esposa de Paulo. Disse, ainda, que haviam encontrado o computador ligado com a página de pesquisa aberta na seguinte url:  
+
+<u>**passagens+de+aviao+exterior+&oq=viagens/1VzieO3FdTgsKvZ/calendario/hoje/**</u>  
+
+Também te informou que, na cozinha, Paulo Snedecor foi encontrado morto segurando uma caneta ao lado de uma xícara de café, onde a perícia encontrou uma substância suspeita. Também tinha um papel com dados de uma conta bancária e uma sequência de números: 24376289351-322433216  
+
+Ele concluiu falando que você tem 10 minutos para dar uma resposta antes que mais carros da polícia cheguem para buscar o culpado.  
+
+1° Problema: Os investigadores afirmam que a url encontrada no computador, que supostamente a esposa Snedecor estava usando no dia, tinha ligação com o assassinato de Paulo e os envolvidos. Descubra que tipo de pesquisa ela estava fazendo, extraindo da url informações que indiquem suas intenções (dica: você pode usar a função `str_split()`). 
+URL:  
+
+<u>**passagens+de+aviao+exterior+&oq=viagens/1VzieO3FdTgsKvZ/calendario/hoje/**</u>  
+
+2° Problema: Na cena do crime, junto ao corpo da vítima, foi encontrado um papel que parecia estar sendo escrito no momento em que ele foi assassinado. A equipe acredita que as informações do papel tenham ligação com o assassino do milionário. Como já se sabe, no papel tinham informações de uma conta bancária e uma sequência de números que parecem ser o CPF e o RG da pessoa com quem ele falava. Organize os números de forma que deixe claro qual é o CPF e o RG para que não haja dúvidas de quem é o assassino (dica: você pode usar a função `str_sub()`).
+<u>**24376289351-322433216**</u>  
+
+3° Problema: Com as informações que você conseguiu, monte 3 frases, conforme o exemplo, que explicitem quem é inocente, quem é o culpado e quem é cúmplice do crime que aconteceu na mansão de Snedecor, de maneira a explicitar as justificativas de sua decisão. Faça isso usando apenas uma função, após definir as strings (dica: você pode usar a função `str_c()`).  
+
+Exemplo:  
+Fulano é culpado porque estava na cozinha e envenenou o café.  
+Fulano é inocente porque tem álibi.  
+Fulano é cúmplice porque tinha intenção de fugir com o assassino.  
+
+
+<details>
+<summary>
+**Gabarito**
+</summary>
+**Questão 1**
+```{r}
+url <- c('passagens+de+aviao+exterior+&oq=viagens/1VzieO3FdTgsKvZ/calendario/hoje/')
+
+info <- url %>%
+  str_split("[+]", simplify = TRUE) %>% 
+  .[1,1:4] %>% 
+  str_to_title() %>% 
+  unlist()
+
+str_c(info[1], info[2], info[3], sep = " ")
+```
+
+
+**Questão 2**  
+Sem uso de Regex
+```{r}
+seq <- "24376289351-322433216"
+
+cpf<- str_c(
+  str_sub(seq, start = 1, end = 3),
+  ".",
+  str_sub(seq, start = 4, end = 6),
+  ".",
+  str_sub(seq, start = 7, end = 9),
+  "-",
+  str_sub(seq, start = 10, end = 11)
+)
+rg<- str_c(
+  str_sub(seq, start = 13, end = 14),
+  ".",
+  str_sub(seq, start = 15, end = 17),
+  ".",
+  str_sub(seq, start = 18, end = 20),
+  "-",
+  str_sub(seq, start = 21, end = 22)
+)
+
+str_c("CPF:",cpf," RG:",rg)
+```
+
+Solução com uso do Regex
+```{r}
+str_replace(seq, 
+            pattern = "([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{2})(-)([0-9]{2})([0-9]{3})([0-9]{3})", 
+            replacement = "CPF:\\1.\\2.\\3-\\4\\ RG:\\6.\\7.\\8-")
+```
+
+**Questão 3**
+
+```{r}
+suspeitos <-c("Júlio","Alfredo","Antonela")
+
+fez <- c("culpado","inocente","cúmplice")
+motivo <- c("estava na cozinha e envenenou o café.","tem álibi.","tinha intenção de fugir com o assassino.")
+
+str_c(suspeitos,"é",fez,"porque",motivo,sep = " ")
+```
+</details>  

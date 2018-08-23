@@ -1,0 +1,57 @@
+Grupo "Situação Atual no Trabalho" Idade escolaridade ansiedade depressão "Frequenta algum grupo religioso" faixa.etaria
+Adesao Empregado 73 "Ensino Fundamental" 23 15 Sim Adulto
+Adesao Empregado 72 "Ensino Fundamental" 25 18 Sim Adulto
+Adesao Empregado 80 Analfabeto 21 20 Sim Adulto
+Adesao Empregado 78 "Ensino Fundamental" 20 15 Sim Adulto
+Adesao Empregado 81 "Ensino Superior" 21 20 Sim Adulto
+Adesao Empregado 77 "Ensino Fundamental" 19 16 Sim Adulto
+Adesao Empregado 90 "Ensino Medio" 15 18 Sim Adulto
+Adesao Empregado 81 "Ensino Fundamental" 21 19 Sim Adulto
+Adesao Desempregado 70 "Ensino Fundamental" 19 12 Nao Adulto
+Adesao Desempregado 74 "Ensino Fundamental" 16 18 Nao Adulto
+Adesao Desempregado 69 "Ensino Fundamental" 20 14 Nao Adulto
+Adesao Desempregado 71 "Ensino Medio" 24 20 Nao Adulto
+Adesao Desempregado 69 "Ensino Medio" 22 17 Nao Adulto
+Adesao Desempregado 82 "Ensino Fundamental" 17 14 Nao Adulto
+Adesao Desempregado 73 "Ensino Fundamental" 20 10 Nao Adulto
+Adesao Desempregado 77 "Ensino Fundamental" 22 20 Nao Adulto
+Adesao Desempregado 79 "Ensino Fundamental" 16 NA Nao Adulto
+Adesao Desempregado 78 "Ensino Fundamental" 21 13 Sim Adulto
+Adesao Desempregado 75 "Ensino Fundamental" 21 11 Sim Adulto
+Adesao Desempregado 90 Analfabeto 15 13 Nao Adulto
+Adesao Desempregado 75 "Ensino Medio" 21 16 Sim Adulto
+Adesao Desempregado 77 "Ensino Superior" 24 19 Sim Adulto
+Adesao Desempregado 73 "Ensino Fundamental" 24 18 Sim Adulto
+Adesao Desempregado 78 "Ensino Fundamental" 24 11 Sim Adulto
+Adesao Desempregado 81 Analfabeto 22 13 Sim Adulto
+Adesao Desempregado 76 "Ensino Fundamental" 17 18 Sim Adulto
+Adesao Desempregado 91 "Ensino Superior" 20 19 Sim Adulto
+Adesao Desempregado 73 "Ensino Fundamental" 17 20 Sim Adulto
+Adesao Desempregado 81 "Ensino Superior" 26 21 Sim Adulto
+Adesao Desempregado 77 "Ensino Fundamental" 18 17 Sim Adulto
+"Nao Adesao" Empregado 67 "Ensino Medio" 23 18 Nao Adulto
+"Nao Adesao" Empregado 76 "Ensino Fundamental" 19 17 Nao Adulto
+"Nao Adesao" Empregado 79 "Ensino Fundamental" 20 20 Nao Adulto
+"Nao Adesao" Empregado 68 "Ensino Superior" 25 22 Sim Adulto
+"Nao Adesao" Empregado 73 "Ensino Medio" 19 20 Nao Adulto
+"Nao Adesao" Empregado 79 "Ensino Superior" 18 18 Nao Adulto
+"Nao Adesao" Empregado 84 "Ensino Fundamental" 18 20 Nao Adulto
+"Nao Adesao" Empregado 73 "Ensino Fundamental" 25 20 Sim Adulto
+"Nao Adesao" Empregado 77 "Ensino Fundamental" 19 21 Sim Adulto
+"Nao Adesao" Desempregado 67 "Ensino Fundamental" 22 23 NA Adulto
+"Nao Adesao" Desempregado 67 "Ensino Medio" 25 17 Nao Adulto
+"Nao Adesao" Desempregado 84 "Ensino Fundamental" 20 15 Nao Adulto
+"Nao Adesao" Desempregado 81 "Ensino Fundamental" 23 15 Nao Adulto
+"Nao Adesao" Desempregado 74 "Ensino Fundamental" 24 21 NA Adulto
+"Nao Adesao" Desempregado 80 Analfabeto 21 17 Nao Adulto
+"Nao Adesao" Desempregado 72 "Ensino Fundamental" 25 18 Nao Adulto
+"Nao Adesao" Desempregado 67 "Ensino Fundamental" 25 23 Nao Adulto
+"Nao Adesao" Desempregado 75 "Ensino Medio" 21 18 Nao Adulto
+"Nao Adesao" Desempregado 73 "Ensino Medio" 22 21 Nao Adulto
+"Nao Adesao" Desempregado 79 "Ensino Fundamental" 18 20 Nao Adulto
+"Nao Adesao" Desempregado 79 "Ensino Medio" 22 19 Nao Adulto
+"Nao Adesao" Desempregado 82 "Ensino Fundamental" NA 17 Nao Adulto
+"Nao Adesao" Desempregado 76 "Ensino Superior" 21 16 Nao Adulto
+"Nao Adesao" Desempregado 79 "Ensino Superior" 22 21 NA Adulto
+"Nao Adesao" Desempregado 75 "Ensino Fundamental" 21 17 Sim Adulto
+"Nao Adesao" Desempregado 67 "Ensino Fundamental" 15 19 Nao Adulto
