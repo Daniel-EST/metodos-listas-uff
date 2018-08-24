@@ -87,7 +87,7 @@ chisq.test(q2_data, correct = FALSE)
 
 # Questão 3 ####################################################################
 # a)
-q3_data <- read_xls("Listas\\Lista 06\\Banco Escalas Psicologia.xls", na = "999")
+q3_data <- read_xls("Listas/Lista 06/Banco Escalas Psicologia.xls", na = "999")
 
 q3_data <- q3_data %>% 
   head(nrow(.)-5L)
