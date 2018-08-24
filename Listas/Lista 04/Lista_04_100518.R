@@ -67,4 +67,4 @@ IC.prop.conservative <- function(x,conf){
 }
 IC.prop.conservative(rbinom(10,1,1/2),0.9)
 # Questao 3 ####################################################################
-baseSaude <- read_table2('Listas\\Lista 04\\Base-saude.txt',na = '9') ; head(baseSaude)
+baseSaude <- read_table2('Listas/Lista 04/Base-saude.txt',na = '9') ; head(baseSaude)

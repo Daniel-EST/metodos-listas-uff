@@ -544,7 +544,7 @@ t.test(q4_Controle$`Reproduçao Visual`, q4_Trauma$`Reproduçao Visual`, mu = 0,
 
 # Questão 5 ####################################################################
 # a)
-q5_data <- read_csv2("Listas\\Lista 06\\EMBRAPA.csv") ; q5_data
+q5_data <- read_csv2("Listas/Lista 06/EMBRAPA.csv") ; q5_data
 
 q5_data$Tratamento <- q5_data$Tratamento %>% 
   factor()
@@ -621,7 +621,7 @@ t.test(q5_data$Peso26, q5_data$Peso0, alternative = "greater",mu = 88)
 
 # Questão 6 ####################################################################
 # a)
-q6_data <- read_csv2("Listas\\Lista 06\\Basevulnerabilidade.csv") ; q6_data
+q6_data <- read_csv2("Listas/Lista 06/Basevulnerabilidade.csv") ; q6_data
 q6_data$situacao <- q6_data$situacao %>% 
   factor(labels = c("Alugado", "Próprio")) ; levels(q6_data$situacao)
 q6_data$escmae <- q6_data$escmae %>% 
@@ -716,7 +716,7 @@ t.test(q6_data$idade[q6_data$vulnerabilidade == "Vulnerável"],
        alternative = "two.sided")
 
 # Questão 7 
-q7_data <- read_xls("Listas\\Lista 06\\Banco Cancer Mama.xls", na = "NA") ; q7_data
+q7_data <- read_xls("Listas/Lista 06/Banco Cancer Mama.xls", na = "NA") ; q7_data
 
 # Tratando
 grau <- str_c(c("3°","2°","1°"), " Grau")

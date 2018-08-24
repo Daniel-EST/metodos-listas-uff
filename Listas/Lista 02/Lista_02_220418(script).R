@@ -7,7 +7,7 @@ require(gridExtra)
 require(sjPlot)
 # Questao 1 ####################################################################
 # Importacao
-tratamento <- readxl::read_xls('Listas\\Lista 02\\Tratamento.xls', na = '999') ; head(tratamento)
+tratamento <- readxl::read_xls('Listas/Lista 02/Tratamento.xls', na = '999') ; head(tratamento)
 #a
 tratamento$Grupo <- tratamento$Grupo %>% 
   factor(labels = c('Adesao','Nao Adesao'))
@@ -40,9 +40,9 @@ class(tratamento)
 #d
 summary(tratamento)
 #e
-readr::write_delim(tratamento, 'Listas\\Lista 02\\tratamento.txt')
-readr::write_csv(tratamento, 'Listas\\Lista 02\\tratamento.csv')
-saveRDS(tratamento, 'Listas\\Lista 02\\tratamento.RDS')
+readr::write_delim(tratamento, 'Listas/Lista 02/tratamento.txt')
+readr::write_csv(tratamento, 'Listas/Lista 02/tratamento.csv')
+saveRDS(tratamento, 'Listas/Lista 02/tratamento.RDS')
 {
   for(i in 3:6){
     mtam <- file.size(dir()[3])
@@ -56,16 +56,16 @@ saveRDS(tratamento, 'Listas\\Lista 02\\tratamento.RDS')
 # E um formato compactado apaenar para o R
 # Questao 2 ####################################################################
 # Importacao
-tratamentoRDS <- readRDS('Listas\\Lista 02\\tratamento.RDS')
+tratamentoRDS <- readRDS('Listas/Lista 02/tratamento.RDS')
 
 #a
 tratamentoQ2a<- tratamentoRDS %>% 
   select(Idade,ansiedade,6)
-write_delim(tratamentoQ2a,'Listas\\Lista 02\\tratamentoQ2a.txt')
+write_delim(tratamentoQ2a,'Listas/Lista 02/tratamentoQ2a.txt')
 #b
 tratamentoQ2b <- tratamentoRDS %>%
   filter(escolaridade=='Ensino Fundamental'&Idade>50&`Frequenta algum grupo religioso`=='Nao')
-write_csv(tratamentoQ2b, 'Listas\\Lista 02\\tratamentoQ2b.csv')
+write_csv(tratamentoQ2b, 'Listas/Lista 02/tratamentoQ2b.csv')
 #c
 tratamentoRDS <- tratamentoRDS %>% 
   arrange(Idade)
@@ -254,4 +254,3 @@ D(expression(x**3),"x")
 # Questao 15 ###################################################################
 #a
 #b
-

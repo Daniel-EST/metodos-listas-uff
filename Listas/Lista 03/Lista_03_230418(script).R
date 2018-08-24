@@ -75,13 +75,11 @@ pbinom(5,15,0.3,lower.tail = F)
 pexp(9,5) - pexp(2,5)
 pbinom(9,15,0.3) - pbinom(2,15,0.3)
 #c
-0
 dbinom(0,15,0.3)
 #d
 pexp(2,5)
 pbinom(1,15,0.3)
 #e
-0
 dbinom(2,15,0.3)
 #f
 pexp(5,5)
@@ -293,4 +291,3 @@ hist(3*t,freq = F)
 curve(dgamma(x,15/2,1/2),add=T)
 #e
 # Preguica
-

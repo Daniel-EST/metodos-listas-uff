@@ -60,20 +60,20 @@ baseQ4Cidade$Cidade <- baseQ4Cidade$Cidade %>%
 #a
 baseQ4a <- right_join(baseQ4,baseQ4Peso, by = c('Nome' = 'nome'))
 #b
-saveRDS(baseQ4a,'Listas\\Lista 01\\baseQ4a.RDS')
+saveRDS(baseQ4a,'Listas/Lista 01/BaseQ4a.RDS')
 #c
 baseQ4c <- left_join(baseQ4,baseQ4Peso, by = c('Nome' = 'nome'))
 #d
-readr::write_csv(baseQ4c,'Listas\\Lista 01\\baseQ4c.csv')
+readr::write_csv(baseQ4c,'Listas/Lista 01/baseQ4c.csv')
 #e
 baseQ4e <- full_join(baseQ4,baseQ4Peso, by = c('Nome' = 'nome')) %>% 
   full_join(baseQ4Op, by = 'Nome')
 #f
-foreign::write.dta(baseQ4e,'Listas\\Lista 01\\baseQ4e.dta')
+foreign::write.dta(baseQ4e,'Listas/Lista 01/baseQ4e.dta')
 #g
 baseQ4g <- full_join(baseQ4,baseQ4Cidade,by = c('Bairro' = 'bairro'))
 #h
-readr::write_delim(baseQ4g,'Listas\\Lista 01\\baseQ4g.txt')
+readr::write_delim(baseQ4g,'Listas/Lista 01/baseQ4g.txt')
 #i
 {
   a <- file.size(dir()[1])
@@ -90,7 +90,7 @@ readr::write_delim(baseQ4g,'Listas\\Lista 01\\baseQ4g.txt')
 
 # Questao 5 ####################################################################
 # Importacao
-Banco1xls <- readxl::read_xls("Listas\\Lista 01\\Banco1.xls")
+Banco1xls <- readxl::read_xls("Listas/Lista 01/Banco1.xls")
 #a
 max(Banco1xls$Altura)
 #b
@@ -101,12 +101,12 @@ Banco1xls$Grupo[which.min(Banco1xls$Altura)]
 Banco1xls$Grupo <- Banco1xls$Grupo %>% 
   factor(labels = c('Placebo','Tramento A'))
 #e
-readr::write_csv(Banco1xls,'Listas\\Lista 01\\Banco1xls.csv')
+readr::write_csv(Banco1xls,'Listas/Lista 01/Banco1xls.csv')
 
 # Questao 6 ####################################################################
 # Importacao
-poptotjovem2010 <- readr::read_csv('Listas\\Lista 01\\populacaototaljovem2010.csv')
-dados2010 <- readr::read_csv('Listas\\Lista 01\\dados2010.csv')
+poptotjovem2010 <- readr::read_csv('Listas/Lista 01/populacaototaljovem2010.csv')
+dados2010 <- readr::read_csv('Listas/Lista 01/dados2010.csv')
 #a
 dados2010mun <- distinct(dados2010,codmun) ; dados2010mun
 #b
@@ -147,7 +147,7 @@ filter(dados2010,idade.cat == 1)
 dados2010[dados2010$idade.cat==1&!(is.na(dados2010$idade.cat)),]
 # Questao 7 ####################################################################
 # Importacao
-basemae <- foreign::read.dta('Listas\\Lista 01\\basemae.dta')
+basemae <- foreign::read.dta('Listas/Lista 01/basemae.dta')
 #a
 basemaeUR <- basemae %>% group_by(munic_res) %>% 
   summarise(UR = paste0(strsplit(as.character(munic_res),'')[[1]][1],strsplit(as.character(munic_res),"")[[1]][2]))
@@ -175,4 +175,3 @@ basemae %>%
    summarise(media.homicidio = mean(homicidio,na.rm = T), media.suicidio = mean(suicidio, na.rm = T))
 #f
 # Deu preguica
-

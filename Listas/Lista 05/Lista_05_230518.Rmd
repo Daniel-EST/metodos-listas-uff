@@ -295,7 +295,3 @@ q3c <- function(x,alpha,muo){
 }
 q3c(baseQ3$Idade[baseQ3$Sexo=="Mulher"],0.03,20)
 ```
-
-
-
-
