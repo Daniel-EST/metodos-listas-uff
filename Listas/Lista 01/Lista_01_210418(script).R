@@ -121,19 +121,10 @@ dados2010 %>%
   summarise(tot.estupro = sum(Estupros , na.rm = T))
 #c
 # Adicionando nova variavel
-dados2010$idade.cat <- rep(NA, length(dados2010$Idade))
-for(i in 1:length(dados2010$Idade)){
-  if(!(is.na(dados2010$Idade[i]))&&dados2010$Idade[i] < 18){
-    dados2010$idade.cat[i] <- 1
-  }
-  if(!(is.na(dados2010$Idade[i]))&&dados2010$Idade[i] >= 18){
-    dados2010$idade.cat[i] <- 2
-  }
-  if(is.na(dados2010$Idade[i])){
-    dados2010$idade.cat[i] <- NA
-  }
-}
-rm('i')
+
+dados2010 <- dados2010 %>% 
+  mutate(idade.cat = ifelse(Idade < 18, 1, 2))
+
 # Contabilizando
 # Preciso pensar em uma otimizacao
 dados2010 %>% 
