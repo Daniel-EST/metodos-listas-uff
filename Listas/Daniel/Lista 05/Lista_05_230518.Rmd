@@ -1,0 +1,297 @@
+---
+title: "Métodos Computacionais para Estatística II"
+subtitle: "Lista 05"
+author: "Daniel dos Santos"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    highlight: github
+    
+---
+
+## Questão 1
+
+### a) 
+Hipóteses (variância conhecida)  
+\(H_0 : \mu = \mu_0\)  
+\(H_1 : \mu < \mu_0\)
+
+
+```{r q1a}
+q1a <- function(x,conf,sigma,mu){
+  n <- length(x)
+  x.bar <- mean(x)
+  alpha <- 1 - conf
+  z <- qnorm(alpha)
+  LS <- mu + sigma*z/sqrt(n)
+  decision <- ifelse(x.bar <= LS,"Rejeita-se Ho","Não Rejeita Ho")
+  cat("Estimativa pontual:", x.bar,
+      "\n Região Crítica:( -Inf ,",LS,"]",
+      "\n Decisão:",decision,"a um nível de significância",alpha)
+}
+amostra <- rnorm(100,30,5)
+q1a(amostra,0.95,5,30)
+```
+### b)
+Hipóteses (variância desconhecida)  
+\(H_0 : \mu = \mu_0\)  
+\(H_1 : \mu > \mu_0\)
+
+```{r q1b}
+q1b <- function(x,conf,mu){
+  n <- length(x)
+  x.bar <- mean(x)
+  s <- sd(x)
+  alpha <- 1 - conf
+  t <- qt(alpha,n-1)
+  LI <- mu - s*t/sqrt(n)
+  decision <- ifelse(x.bar >= LI,"Rejeita-se Ho","Não Rejeita Ho")
+  cat("Estimativa pontual:", x.bar,
+      "\n Região Crítica:[",LI,", +Inf )",
+      "\n Decisão:",decision,"a um nível de significância",alpha)
+}
+amostra <- rnorm(100,30,5)
+q1b(amostra,0.95,30)
+```
+### c)
+Teste de hipótese para proporção amostral  
+\(H_0 : \hat{P} = \hat{P_0}\)  
+\(H_1 : \hat{P} \ne \hat{P_0}\)
+
+```{r q1c}
+q1c <- function(x,conf,po){
+
+  n <- length(x)
+  p <- mean(x)
+  alpha <- 1 - conf
+  z <- qnorm(1-alpha/2)
+  erro <- sqrt(p*(1-p))*z/sqrt(n)
+  LI <- po - erro
+  LS <- po + erro
+  decision <- ifelse(p>LI&&p<LS,"Não rejeita Ho","Rejeita Ho")
+  cat("Estimativa pontual:", p,
+      "\n Região Crítica:(-Inf, ",LI,"]","U [",LS, "+ Inf )",
+      "\n Decisão:",decision,"a um nível de significância",alpha)
+}
+amostra <- rbinom(100,1,0.9)
+q1c(amostra,0.95,0.9)
+```
+### d)
+
+```{r q1d}
+q1d <- function(x,conf,sigma,mu){
+  n <- length(x)
+  x.bar <- mean(x)
+  alpha <- 1 - conf
+  LS <- qnorm(alpha)
+  decision <- ifelse(sqrt(n)*(x.bar - mu)/sigma <= LS,"Rejeita-se Ho","Não Rejeita Ho")
+  cat("Estimativa pontual:", sqrt(n)*(x.bar - mu)/sigma ,
+      "\n Região Crítica:( -Inf ,",LS,"]",
+      "\n Decisão:",decision,"a um nível de significância",alpha)
+}
+amostra <- rnorm(100,30,5)
+q1d(amostra,0.95,5,30)
+```
+### e)
+Erro Tipo 2 unilateral a esquerda.  
+\(H_{0}:\mu=\mu_{0}\)  
+\(H_{1}:\mu<\mu_{0}\)  
+\(\beta(\mu)=P(\bar{X}\notin RC | \mu)\)
+```{r q1e}
+erro.2 <- function(n,alpha,mu0,sigma2,mu){
+  k <- qnorm(alpha,mu0,sqrt(sigma2/n))
+  prob <-  pnorm(k, mu, sqrt(sigma2/n))
+  return(prob)
+}
+```
+
+### f)
+```{r q1f, echo = F, fig.align = 'center'}
+curve(erro.2(20,0.05,30,25,x),0,60, main = 'Erro tipo II para n = 20',ylab = expression(beta(mu)),xlab = expression(mu))
+```
+
+### g)
+```{r q1g, echo = F, fig.align = 'center'}
+curve(erro.2(20,0.05,30,25,x),0,60,col = 'black',ylab = expression(beta(mu)),xlab = expression(mu))
+curve(erro.2(30,0.05,30,25,x),0,60,col = 'red',add = T)
+curve(erro.2(50,0.05,30,25,x),0,60,col = 'blue',add = T)
+curve(erro.2(100,0.05,30,25,x),0,60,col = 'green',add = T)
+legend("topleft",
+       c("20", "30", "50", "100"), title="n",
+       col=c("black", "red","blue","green"),
+       lty=c(1, 1))
+title("Erro tipo 2 para diferentes n")
+```
+
+### h) 
+\(\pi(\mu)=P(\bar{X}\in RC|\mu)\)
+```{r q1h}
+q1h <-  function(n,alfa,mu,mu0,sigma2){
+  k1 <- qnorm(1-alfa/2,mu0,sqrt(sigma2/n))
+  k2 <- qnorm(alfa/2,mu0,sqrt(sigma2/n))
+  prob <- 1 - (pnorm(k1,mu,sqrt(sigma2/n)) - pnorm(k2,mu,sqrt(sigma2/n)))
+  return(prob)
+}
+```
+
+### i)
+```{r q1i, echo = F, fig.align = 'center'}
+curve(q1h(20,0.05,x,30,25),0,60,main = 'Função Poder para n = 20',ylab = expression(pi(mu)),xlab = expression(mu))
+```
+
+### j)
+```{r q1j, echo = F, fig.align = 'center'}
+curve(q1h(20,0.05,x,30,25),0,60,col = 'black',ylab = expression(pi(mu)),xlab = expression(mu))
+curve(q1h(30,0.05,x,30,25),0,60,add = T,col = 'red')
+curve(q1h(50,0.05,x,30,25),0,60,add = T, col = 'blue')
+curve(q1h(100,0.05,x,30,25),0,60,add = T, col = 'green')
+legend("topleft",
+       c("20", "30", "50", "100"), title="n",
+       col=c("black", "red","blue","green"),
+       lty=c(1, 1))
+title("Função Poder para diferentes n")
+```
+
+## Questão 2
+
+### a)
+\(H_0:\mu=\mu_0\)  
+\(H_1:\mu>\mu_0\)
+```{r q2a}
+q2a <- function(x,conf,mu){
+  n <- length(x)
+  x.bar <- mean(x)
+  s <- sd(x)
+  alpha <- 1 - conf
+  t <- qt(alpha,n-1)
+  LI <- mu - s*t/sqrt(n)
+  decision <- ifelse(x.bar >= LI,"Rejeita-se Ho","Não Rejeita Ho")
+  cat("Estimativa pontual:", x.bar,
+      "\n Região Crítica:[",LI ,"+Inf)",
+      "\n Decisão:",decision,"a um nível de significância",alpha)  
+}
+q2a(rnorm(100,30,10),.95,30)
+```
+
+### b)
+
+```{r q2b}
+q2b <- function(x,conf,mu){
+  n <- length(x)
+  x.bar <- mean(x)
+  s <- sd(x)
+  alpha <- 1 - conf
+  LI <- -qt(alpha,n-1)
+  decision <- ifelse(sqrt(n)*(x.bar-mu)/s >= LI,"Rejeita-se Ho","Não Rejeita Ho")
+  cat("Estimativa pontual:", sqrt(n)*(x.bar-mu)/s,
+      "\n Região Crítica:[",LI ,"+Inf)",
+      "\n Decisão:",decision,"a um nível de significância",alpha)  
+}
+q2b(rnorm(100,30,10),.95,30)
+```
+### c)
+\(H_{0}:\mu=\mu_{0}\)  
+\(H_{1}:\mu<\mu_{0}\)  
+\(\beta(\mu)=P(\bar{X}\notin RC | \mu)\)
+```{r q2c}
+q2c <- function(n,s,alpha,muo,mu){
+  k <- qnorm(1-alpha,muo,s/sqrt(n))
+  prob <- pnorm(k,mu,s/sqrt(n))
+  return(prob)
+}
+```
+### d)
+```{r q2d, echo = F, fig.align = 'center'}
+curve(q2c(20,5,0.05,10,x),from = 0,to = 20,main = "Erro tipo II para n = 20", xlab=expression(mu),ylab=expression(beta(mu)))
+```
+
+### e)
+```{r q2e, echo = F, fig.align = 'center'}
+curve(q2c(20,5,0.05,10,x),from = 0,to = 20,main = "n = 20", col = 'black', xlab=expression(mu),ylab=expression(beta(mu)))
+curve(q2c(30,5,0.05,10,x),from = 0,to = 20,main = "n = 30",col = 'red', xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+curve(q2c(50,5,0.05,10,x),from = 0,to = 20,main = "n = 50",col = 'blue', xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+curve(q2c(100,5,0.05,10,x),from = 0,to = 20,main = "n = 100", col = 'green' , xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+legend("topleft",
+       c("20", "30", "50", "100"), title="n",
+       col=c("black", "red","blue","green"),
+       lty=c(1, 1))
+```
+
+### f)
+```{r q2f, echo = F, fig.align = 'center'}
+curve(q2c(20,5,0.01,10,x),from = 0,to = 20,main = "n = 20", col = 'black', xlab=expression(mu),ylab=expression(beta(mu)))
+curve(q2c(30,5,0.05,10,x),from = 0,to = 20,main = "n = 30",col = 'red', xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+curve(q2c(50,5,0.07,10,x),from = 0,to = 20,main = "n = 50",col = 'blue', xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+curve(q2c(100,5,0.1,10,x),from = 0,to = 20,main = "n = 100", col = 'green' , xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+legend("topleft",
+       c("0.01", "0.05", "0.07", "0.1"), title=expression(alpha),
+       col=c("black", "red","blue","green"),
+       lty=c(1, 1))
+```
+
+### g)
+\(\pi(\mu)=P(\bar{X}\in RC|\mu)\)
+```{r q2g_fun}
+q2g <-  function(n,s,alpha,muo,mu){
+  return(1-q2c(n,s,alpha,muo,mu))
+}
+```
+```{r q2g_plot, echo = F, fig.align = 'center'}
+curve(q2g(20,5,0.05,10,x),from = 0,to = 20,main = "n = 20", col = 'black', xlab=expression(mu),ylab=expression(beta(mu)))
+curve(q2g(30,5,0.05,10,x),from = 0,to = 20,main = "n = 30",col = 'red', xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+curve(q2g(50,5,0.05,10,x),from = 0,to = 20,main = "n = 50",col = 'blue', xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+curve(q2g(100,5,0.05,10,x),from = 0,to = 20,main = "n = 100", col = 'green' , xlab=expression(mu),ylab=expression(beta(mu)),add = T)
+legend("topleft",
+       c("20", "30", "50", "100"), title=expression(alpha),
+       col=c("black", "red","blue","green"),
+       lty=c(1, 1))
+```
+
+## Questão 3
+
+Importação de dados
+```{r q3_import}
+baseQ3 <- readRDS("BaseGenero.rds")
+head(baseQ3)
+```
+
+
+###a)
+```{r q3a}
+q3a <- function(x,alpha,muo){
+  n <- length(x)
+  x.barra <- mean(x)
+  s <- sd(x)
+  p <- sqrt(n)*(x.barra-muo)/s
+  prob <- 1 -  pt(p,n-1)
+  decision <- ifelse(prob < alpha, no = "Não rejeita Ho",yes = "Rejeita Ho")
+  cat("P-valor: ",prob,"\n ",decision,"a um nível de significância",alpha)
+}
+q3a(baseQ3$Peso[baseQ3$Sexo == 'Homem'],0.05,70)
+```
+
+### b)
+```{r q3b}
+q3b <- function(x,alpha,muo){
+  n <- length(x)
+  x.barra <- mean(x)
+  s <- sd(x)
+  LI <- qnorm(alpha,muo,s/sqrt(n))
+  decision <- ifelse(x.barra<= LI,"Rejeita Ho","Não Rejeita Ho")
+  cat("Estimativa pontual: ",x.barra,"\n RC(mu ," ,(1-alpha)*100,"%) = (-Inf , ",LI,"] \n",decision)
+}
+q3b(baseQ3$Idade[baseQ3$Sexo=="Homem"],0.01,muo=30)
+```
+
+### c)
+```{r q3c}
+q3c <- function(x,alpha,muo){
+  n <- length(x)
+  x.barra <- mean(x)
+  s <- sd(x)
+  p <- sqrt(n)*(x.barra-muo)/s
+  prob <- 2 * (1- pt(p,n-1))
+  return(prob)
+}
+q3c(baseQ3$Idade[baseQ3$Sexo=="Mulher"],0.03,20)
+```

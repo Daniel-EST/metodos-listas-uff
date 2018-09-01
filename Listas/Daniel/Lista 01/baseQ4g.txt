@@ -1,0 +1,15 @@
+Nome Idade Altura Genero Estado_Civil Bairro Cidade
+Joao 27 1.83 Masculino Solteiro Icarai Niteroi
+Maria 22 1.53 Feminino Solteiro Inga Niteroi
+Ana 21 1.79 Feminino Casado Botafogo "Rio de Janeiro"
+Fabia 37 1.58 Feminino Solteiro Lagoa "Rio de Janeiro"
+Rodrigo 29 1.65 Masculino Casado "Boa Viagem" Niteroi
+Renato 27 1.7 Masculino Solteiro Leblon "Rio de Janeiro"
+Luciana 21 1.51 Feminino Solteiro Leblon "Rio de Janeiro"
+Guilherme 18 1.66 Masculino Solteiro Inga Niteroi
+Gabriel 19 1.72 Masculino Casado Icarai Niteroi
+Diogo 25 1.83 Masculino Casado Botafogo "Rio de Janeiro"
+NA NA NA NA NA Copacabana "Rio de Janeiro"
+NA NA NA NA NA Ipanema "Rio de Janeiro"
+NA NA NA NA NA Gavea "Rio de Janeiro"
+NA NA NA NA NA "Sao Francisco" "Rio de Janeiro"

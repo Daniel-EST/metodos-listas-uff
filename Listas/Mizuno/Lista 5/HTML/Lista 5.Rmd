@@ -1,0 +1,777 @@
+---
+title: "Lista 5"
+author: "Gabriel Mizuno"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+```{r packages,echo=F,include=F}
+library(dplyr)
+library(tibble)
+library(foreign)
+library(readr)
+library(readxl)
+library(DescTools)
+setwd("/Volumes/MIZUNO/Listas/Lista 5/HTML")
+```
+
+#Questao 1
+<p style="text-align: center;">$\sigma^2=25$</p> 
+### a)
+
+TH unilateral a esquerda.  
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$  vs  $H_{1}:\mu<\mu_{0}$</p>  
+$\alpha=P($Erro tipo I$)=P(\overline{X}<x.c)$  
+<span style="color:red">**OBS:**Para calcular a probabilidade pedida estou padronizando</span>
+```{r}
+TH.media=function(x,sigma,alfa,mi0){
+  n <- length(x)
+  x.barra <- mean(x)
+  z <- qnorm(alfa)
+  #Criando a Regiao Critica
+  x.c <- mi0+sigma*z/sqrt(n)
+  #Estimativas e RC
+  cat("Estimativa Pontual;",x.barra,"\n","Regiao cirtica=(-inf,",x.c,"]")
+  #Decidindo
+  if (x.barra<x.c){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+a <- rnorm(10,2,5)
+TH.media(a,sigma=5,alfa=.1,mi0=2)
+```
+<span style="color:red">**OBS:**Nao estou padronizando</span>
+
+```{r}
+TH.media2=function(x,sigma,alfa,mi0){
+  n <- length(x)
+  x.barra <- mean(x)
+  #Determinando a Regiao Critica
+  x.c <- qnorm(p=alfa,mean=mi0,sd=sigma/sqrt(n))
+  cat("Estimativa Pontual;",x.barra,"\n","Regiao cirtica=[-inf,",x.c,"]")
+  #Decidindo
+  if (x.barra<x.c){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+TH.media2(a,sigma=5,alfa=.1,mi0=2)
+```
+
+
+### b)
+TH unilateral a direita.  
+<p style="text-align: center;">$H_{0}:\sigma^2=\sigma^2_{0}$ vs $H_{1}:\sigma^2>\sigma^2_{0}$</p>
+$\alpha=P($Erro tipo I$)=P(Q>q.c)$, onde $Q\sim\chi_{n-1}^2$
+```{r}
+TH.var=function(x,sigma20,alfa){
+  n <- length(x)
+  s2 <- var(x)
+  #Criando a Regiao Critica
+  q.c <- qchisq(df=n-1,lower.tail=FALSE,p=alfa)
+  #Estimativas e RC
+  cat("Estimativa Pontual;",s2,"\n","Regiao cirtica; [",q.c,"inf)")
+  #Decidindo
+  q <- (n-1)*s2/sigma20
+  if (q>q.c){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+TH.var(rnorm(10),sigma20=1,alfa=.1)
+```
+
+### c)
+TH Bilateral
+<p style="text-align: center;">$H_{0}:p=p_{0}$ vs $H_{1}:p\neq p_{0}$  </p>
+$\alpha=P($Erro tipo I$)=P(\widehat{P}<p.c_{1}$ ou $\widehat{P}>p.c_{2})$  
+```{r}
+TH.prop=function(x,h,alfa,p0){
+  print(x)
+  for (i in 1:length(x)){
+    if (x[i]<h){
+      x[i] <- 0
+    }
+    if (x[i]>h){
+      x[i] <- 1
+    }
+  }
+  print(x)
+  n <- length(x)
+  p.chapeu <- mean(x)
+  #Criando a Regiao Critica
+  p.c1 <- qnorm(alfa/2,mean=p0,sd=sqrt(p0*(1-p0)/n))
+  p.c2 <- qnorm(1-alfa/2,mean=p0,sd=sqrt(p0*(1-p0)/n))
+  #Estimativas e RC
+  cat("Estimativa Pontual;",p.chapeu,"\n",
+      "Regiao cirtica=(-inf;",p.c1,"]U[",p.c2,"inf)")
+  #Decidindo
+  if (p.chapeu>p.c1 | p.chapeu<p.c2){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+a <- rnorm(10,10,1)
+TH.prop(x=a,alfa=0.05,h=10,p0=0.3)
+```
+
+### d)
+TH unilateral a esquerda, usando a Estatistica de Teste: $Z=\frac{(\overline{X}-\mu_{0})\cdot\sqrt{n}}{\sigma}$   
+   
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu<\mu_{0}$</p>
+$\alpha=P($Erro tipo I$)=P(Z<z.c)$, onde Z~N(0,1)
+```{r}
+TH.media2=function(x,sigma,alfa,mi0){
+  n <- length(x)
+  x.barra <- mean(x)
+  z <- (x.barra-mi0)*sqrt(n)/sigma
+  #Criando a Regiao Critica (com base em z)
+  z.c <- qnorm(alfa)
+  #Estimativas e RC
+  cat("Estimativa Pontual;",x.barra,"\n","Regiao cirtica=(-inf,",z.c,"]")
+  #Decidindo
+  if (z<z.c){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+TH.media2(rnorm(10,mean=10,sd=5),sigma=5,alfa=.1,mi0=10)
+```
+### e)
+Erro Tipo 2 unilateral a esquerda. 
+   
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu<\mu_{0}$ </p>  
+
+$\beta(\mu)=$$P($Nao rejeitar $H_{0}|H_{0}$ falso$)=P(\bar{X}\notin RC | \mu)=P(\bar{X}>x.c | \mu)$
+```{r}
+ET2=function(n,alfa,sigma2,mi0,mi){
+  sigma <- sqrt(sigma2)
+  #Criando a Regiao Critica
+  z <- qnorm(alfa)
+  x.c <- mi0+sigma*z/sqrt(n)
+  #Calculando a probabilidade pedida
+  z <- (x.c-mi)*sqrt(n)/sigma
+  prob <- pnorm(z,lower.tail = FALSE)
+  return(prob)
+}
+ET2(n=10,alfa=0.1,sigma2=25,mi0=10,mi=10)
+```
+<span style="color:red">**OBS:**Para calcular a probabilidade pedida estou padronizando, porem nao e necessario fazer isso </span>  
+
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu<\mu_{0}$</p>  
+$\beta(\mu)=$$P($Nao rejeitar $H_{0}|H_{0}$ falso$)=P(\bar{X}\notin RC | \mu)=P(\bar{X}>x.c | \mu)$
+```{r}
+ET2.2=function(n,alfa,sigma2,mi0,mi){
+  sigma <- sqrt(sigma2)
+  #Criando a Regiao Critica 
+  x.c <- qnorm(p=alfa,mean=mi0,sd=sigma/sqrt(n))
+  #Calculando a probabilidade pedida
+  prob <- pnorm(x.c,mi,sigma/sqrt(n),lower.tail=FALSE)
+  return(prob)
+}
+ET2.2(n=10,alfa=0.1,sigma2=25,mi0=10,mi=5)
+```
+
+### f)
+```{r,echo=FALSE}
+curve(ET2(n=20,alfa=0.05,mi0=30,sigma2=10,x),0,60,ylab=expression(beta(mu)),xlab=expression(mu),col="red")
+curve(ET2.2(n=20,alfa=0.05,mi0=30,sigma2=10,x),0,60,ylab=expression(beta(mu)),xlab=expression(mu),col="blue")
+```
+
+### g)
+```{r,eval=FALSE}
+curve(ET2(n=20,alfa=0.05,mi0=30,sigma2=10,x),15,40,add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(n=30,alfa=0.05,mi0=30,sigma2=10,x),15,40,add=TRUE,col="red"
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(n=50,alfa=0.05,mi0=30,sigma2=10,x),15,40,add=TRUE,col="blue"
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(n=100,alfa=0.05,mi0=30,sigma2=10,x),15,40,add=TRUE,col="green"
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+legend(15, 1,
+       c("20", "30", "50", "100"), title="n",
+       col=c("black", "red","blue","green"),
+       lty=c(1, 1))
+```
+```{r,echo=FALSE}
+knitr::include_graphics(rep("/Volumes/MIZUNO/Listas/Lista 5/HTML/1g.png", 1))
+```
+
+### h)
+Funcao Poder para TH Bilateral. 
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu\neq \mu_{0}$  </p>
+$\pi(\mu)=P($Rejeitar $H_{0}|\mu)=P(\bar{X}\in RC|\mu)=P(\bar{X}>x.c_{1}$ ou $\bar{X}<x.c_{2}|\mu)$
+```{r}
+poderBi=function(n,alfa,sigma2,mi0,mi){
+  sigma <- sqrt(sigma2)
+  #achando a regiao critica
+  x.c1 <- qnorm(1-alfa/2,mean=mi0,sd=sqrt(sigma2/n))
+  x.c2 <- qnorm(alfa/2,mean=mi0,sd=sqrt(sigma2/n))
+  #funcao poder
+  poder <- pnorm(x.c2,mean=mi,sd=sqrt(sigma2/n))+pnorm(x.c1,mean=mi,sd=sqrt(sigma2/n)
+                                                       ,lower.tail=FALSE)
+  return(poder)
+}
+poderBi(n=10,alfa=0.05,sigma2=25,mi0=10,mi=10)
+```
+
+### i)
+```{r,echo=FALSE}
+curve(poderBi(n=20,alfa=0.05,mi=x,sigma2=25,mi0=30),10,50
+      ,ylab=expression(pi(mu)),xlab=expression(mu))
+```
+
+### j)
+```{r,eval=FALSE}
+curve(poderBi(n=20,alfa=0.05,x,sigma2=25,mi0=30),10,50,add=TRUE
+      ,ylab=expression(pi(mu)),xlab=expression(mu))
+curve(poderBi(n=30,alfa=0.05,x,sigma2=25,mi0=30),10,50,add=TRUE,col="red"
+      ,ylab=expression(pi(mu)),xlab=expression(mu))
+curve(poderBi(n=50,alfa=0.05,x,sigma2=25,mi0=30),10,50,add=TRUE,col="green"
+      ,ylab=expression(pi(mu)),xlab=expression(mu))
+curve(poderBi(n=100,alfa=0.05,x,sigma2=25,mi0=30),10,50,add=TRUE,col="blue"
+      ,ylab=expression(pi(mu)),xlab=expression(mu))
+legend(10,0.5,
+       c("20", "30", "50", "100"), title="n",
+       col=c("black", "red","green","blue"),
+       lty=c(1, 1))
+```
+
+```{r,echo=FALSE}
+knitr::include_graphics(rep("/Volumes/MIZUNO/Listas/Lista 5/HTML/1j.png", 1))
+```
+  
+#Questao 2
+
+### a)
+TH unilateral a direita para media com variancia desconhecida.  
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu > \mu_{0}$  </p>
+$\alpha=P($Erro tipo I$)=P(\overline{X}>t.c | \mu=\mu_{0})$
+```{r}
+TH.media=function(x,alfa,mi0){
+  n <- length(x)
+  x.barra <- mean(x)
+  s <- sd(x)
+  #Criando a Regiao Critica
+  t <- qt(p=1-alfa,df=n-1)
+  t.c <- mi0+t*s/sqrt(n)
+  cat("Estimativa Pontual;",s^2,"\n","Regiao Critica;[",t.c,";Inf)")
+  #Decidindo
+  if (x.barra>t.c){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+```
+
+### b)
+TH unilateral a direita para media com variancia desconhecida.    
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu > \mu_{0}$  </p>
+Usando a Estatistica de Teste:
+$T=\frac{(\overline{X}-\mu_{0})\cdot\sqrt{n}}{S}$ e $T\sim t_{n-1}$  
+$\alpha=P($Erro tipo I$)=P(T\in R.C |\mu=\mu_{0})=P(T>z.c|\mu=\mu_{0})$
+```{r}
+TH.media2=function(x,alfa,mi0){
+  n <- length(x)
+  x.barra <- mean(x)
+  s <- sd(x)
+  z <- (x.barra-mi0)*sqrt(n)/s
+  #Criando a Regiao Critica
+  z.c <- qnorm(alfa)
+  #Decidindo
+  if (z>z.c){
+    cat("Rejeita-se Ho a um nivel de significancia",alfa)
+  }
+  else{
+    cat("Nao rejeita-se Ho a um nivel de significancia",alfa)
+  }
+}
+```
+
+### c)
+Erro Tipo 2 para TH unilateral a direita.  
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu > \mu_{0}$  </p>    
+$\beta(\mu)=P($Nao rejeitar $H_{0}|H_{0}$ e falso$)=P(\bar{X}\notin RC | \mu=\mu_{0})=P(\bar{X}<t.c | \mu=\mu_{0})$
+```{r}
+ET2=function(n,s,alfa,mi0,mi){
+  #Criando a Regiao Critica
+  t <- qt(p=1-alfa,df=n-1)
+  t.c <- mi0+t*s/sqrt(n)
+  #Calculando a probabilidade pedida(estou "padronizando")
+  q <- (t.c-mi)*sqrt(n)/s
+  prob <- pt(q,df=n-1)
+  return(prob)
+}
+ET2(n=10,s=1,alfa=0.2,mi0=10,mi=10)
+```
+
+### d)
+```{r,echo=FALSE}
+curve(ET2(x,mi0=10,s=1,alfa=0.05,n=20),0,20,ylab=expression(beta(mu))
+      ,xlab=expression(mu))
+```
+
+### e)
+```{r,eval=FALSE}
+curve(ET2(x,mi0=10,s=1,alfa=0.05,n=20),5,15,add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(x,mi0=10,s=1,alfa=0.05,n=30),5,15,col="red",add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(x,mi0=10,s=1,alfa=0.05,n=50),5,15,col="green",add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(x,mi0=10,s=1,alfa=0.05,n=100),5,15,col="blue",add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+legend(6, 0.5,
+       c("20", "30", "50", "100"), title="n",
+       col=c("black", "red","green","blue"),
+       lty=c(1, 1))
+```
+```{r,echo=FALSE}
+knitr::include_graphics(rep("/Volumes/MIZUNO/Listas/Lista 5/HTML/2e.png", 1))
+```
+
+
+### f)
+```{r,eval=FALSE}
+curve(ET2(x,mi0=10,s=1,alfa=0.01,n=20),5,15,add=TRUE,ylab=expression(beta(mu))
+      ,xlab=expression(mu))
+curve(ET2(x,mi0=10,s=1,alfa=0.05,n=20),5,15,col="red",add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(x,mi0=10,s=1,alfa=0.07,n=20),5,15,col="green",add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+curve(ET2(x,mi0=10,s=1,alfa=0.1,n=20),5,15,col="blue",add=TRUE
+      ,ylab=expression(beta(mu)),xlab=expression(mu))
+legend(6, 0.5,
+      c("0.01", "0.05", "0.07", "0.1"), title=expression(alfa),
+      col=c("black", "red","green","blue"),
+      lty=c(1, 1))
+```
+```{r,echo=FALSE}
+knitr::include_graphics(rep("/Volumes/MIZUNO/Listas/Lista 5/HTML/2f.png", 1))
+```
+
+
+### g)
+Funcao Poder para TH unilateral de direita.  
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu > \mu_{0}$  </p>  
+$\pi(\mu)=P($Rejeitar $H_{0}|\mu)=P(\bar{X}\in RC|\mu=\mu_{0})=P(\bar{X}>x.c_{1}|\mu=\mu_{0})$
+```{r}
+poderUni=function(n,s,alfa,mi0,mi){
+  z <- qt(df=n-1,p=1-alfa)
+  #Definindo a regiao critica
+  t.c <- s*z/sqrt(n)+mi0
+  #Calcullando a probabilidade pedida
+  p <- (t.c-mi)*sqrt(n)/s
+  prob <- pt(df=n-1,p,lower.tail=FALSE)
+  return(prob)
+}
+poderUni(n=10,s=1,alfa=.05,mi0=10,mi=10)
+```
+```{r,echo=FALSE}
+curve(poderUni(n=20,s=1,alfa=0.01,mi0=5,mi=x),3,8,ylab=expression(pi(mu)),xlab=expression(mu))
+```
+
+#Questao 3
+```{r}
+base=readRDS("BaseGenero.rds")
+```
+### a)
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu>\mu_{0}$ e $\alpha=0.05$</p>  
+P-Valor$=P(\bar{X}>x|\mu=\mu_{0})$
+```{r}
+pvalorDir=function(x,alfa,mi0){
+  s <- sd(x)
+  x.barra <- mean(x)
+  n <- length(x)
+  #Calculando o p-valor
+  p <- (x.barra-mi0)*sqrt(n)/s
+  prob <- pt(df=n-1,p,lower.tail=FALSE)
+  cat("O p-valor e:",prob,"\n")
+  #Determinando se rejeita ou nao
+  if (prob>alfa){
+    cat("Nao rejeito a hipotese nula
+        ,ou seja,a media dos peso e inferior ou igual a 70Kg")
+  }
+  else if (alfa>prob){
+    cat("Rejeito a hipotese nula
+        ,ou seja,a media dos peso e superior a 70Kg")
+  }
+}
+base1 <- base %>% filter(Sexo=="Homem")
+pvalorDir(x=base1$Peso,alfa=0.02,mi0=70)
+```
+<span style="color:red">**Determinando a Regiao Critica**</span> 
+
+```{r}
+TH.mediaDir=function(x,alfa,mi0){
+  n <- length(na.omit(x))
+  s <- sd(x,na.rm=TRUE)
+  x.barra <- mean(x,na.rm=TRUE)
+  #Determinando a Regiao Critica
+  t <- qnorm(p=1-alfa)
+  t.c <- s*t/sqrt(n)+mi0
+  #Decidindo
+  if (x.barra>t.c){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa,"\n",
+        ",ou seja,a media dos peso e superior a 70Kg")
+  }
+  else if (x.barra<t.c){
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa,"\n",
+        ",ou seja,a media dos peso e inferior ou igual a 70Kg")
+  }
+}
+base1 <- base %>% filter(Sexo=="Homem")
+TH.mediaDir(x=base1$Peso,alfa=0.02,mi0=70)
+```
+
+### b)
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu<\mu_{0}$ e $\alpha=0.01$</p>
+$\alpha=P($Erro tipo I$)=P(\overline{X}<t.c$ | $\mu=\mu_{0})$
+```{r}
+TH.mediaEsq=function(x,alfa,mi0){
+  x.barra <-mean(x)
+  n <- length(x)
+  s <- sd(x)
+  q <- qt(df=n-1,alfa)
+  #Achando a Regiao Critica
+  t.c <- mi0+q*s/sqrt(n)
+  cat("Regiao cirtica=[-inf,",t.c,"]")
+  #Determinando se rejeita ou nao
+  if (x.barra>t.c){
+    cat("\n","Nao rejeito a hipotese nula
+        ,ou seja,a media de idade e superior a 30 anos ou mais")
+  }
+  if (x.barra<t.c){
+    cat("\n","Rejeito a hipotese nula
+        ,ou seja,a media de idade e inferior a 30 anos")
+  }
+}
+base1 <- base %>% filter(Sexo=="Homem")
+TH.mediaEsq(x=base1$Idade,alfa=0.01,mi0=30)
+```
+
+<span style="color:red">**Calculando o P-Valor**</span>  
+$P-Valor=P($Erro tipo I$)=P(\overline{X}<x_{1}$ | $\mu=\mu_{0})$
+```{r}
+pvalor=function(x,alfa,mi0){
+  n <- length(x)
+  x1 <- mean(x,na.rm=TRUE)
+  s <- sd(x,na.rm=TRUE)
+  t <- (x1-mi0)*sqrt(n)/s
+  pv <- pt(q=t,df=n-1)
+  cat("p-valor e:",pv,"\n")
+  if (alfa>pv){
+    cat("Rejeitamos Ho, para im nivel de significancia:",alfa)
+  }
+  else if (alfa<pv){
+    cat("Nao rejeitamos Ho, para im nivel de significancia:",alfa)
+  }
+}
+pvalor(x=base1$Idade,alfa=0.01,mi0=30)
+```
+
+
+### c)
+<p style="text-align: center;">$H_{0}:\mu=\mu_{0}$ vs $H_{1}:\mu\neq\mu_{0}$ e $\alpha=0.03$</p>
+P-Valor$=2\cdot P(\overline{X}>x|\mu=\mu_{0})$
+```{r}
+pvalorBi=function(x,alfa,mi0){
+  s <- sd(x)
+  x.barra <- mean(x)
+  n <- length(x)
+  #Calculando o p-valor(TEM Q TOMAR CUIDADO 
+  #POIS NAO SABEMOS "ONDE" O VALOR DE X.BARRA ESTA 
+  #ANTES DE COMECAR A FAZER AS CONTAS)
+  if (x.barra>mi0){
+    p <- (x.barra-mi0)*sqrt(n)/s
+    prob <- 2*pt(df=n-1,p,lower.tail=FALSE)
+    cat("O p-valor e:",prob,"\n")
+  }
+  else{
+    p <- (x.barra-mi0)*sqrt(n)/s
+    prob <- 2*pt(df=n-1,p)
+    cat("O p-valor e:",prob,"\n")
+  }
+  #Determinando se rejeita ou nao
+  if (prob>alfa){
+    cat("Nao rejeito a hipotese nula
+        ,ou seja,a media dos peso e inferior ou igual a 70Kg")
+  }
+  else if (alfa>prob){
+    cat("Rejeito a hipotese nula
+        ,ou seja,a media dos peso e superior a 70Kg")
+  }
+}
+base1<-filter(base,base$Sexo=="Mulher") 
+pvalorBi(x=base1$Idade,alfa=0.03,mi0=20)
+```
+<span style="color:red">**Determinando a Regiao Critica**</span> 
+```{r}
+TH.mediaDif=function(x,alfa,mi0){
+  n <- length(x)
+  x.barra <- mean(x,na.rm=TRUE)
+  s <- sd(x,na.rm=TRUE)
+  t1 <- qt(p=alfa/2,df=n-1)
+  t2 <- qt(p=1-alfa/2,df=n-1)
+  #Determinando a Regiao Critica
+  t.c1 <- s*t1/sqrt(n)+mi0
+  t.c2 <- s*t2/sqrt(n)+mi0
+  #Decidindo
+  if (x.barra<t.c1 | x.barra>t.c2 ){
+    cat("\n","Rejeita-se Ho a um nivel de significancia",alfa,"\n",
+        ",ou seja,a media das idades e diferente a 20 anos")
+  }
+  else{
+    cat("\n","Nao rejeita-se Ho a um nivel de significancia",alfa,"\n",
+        ",ou seja,a media dos peso e igual a 20 anos")
+  }
+}
+base1<-filter(base,base$Sexo=="Mulher") 
+TH.mediaDif(x=base1$Idade,alfa=0.03,mi0=20)
+```
+
+### d)
+<p style="text-align: center;">$H_{0}:p=p_{0}$ vs $H_{1}:p>p_{0}$</p>
+$\alpha=P($Erro tipo I$)=P(\widehat{P}\in R.C|p=p_{0})=P(\widehat{P}>p.c)$
+
+```{r}
+TH.prop=function(x,alfa,h,p0){
+  print(x)
+  #Determinando a proporcao observada
+  for (i in 1:length(x)){
+    x[i] <- ifelse(x[i]>h,1,0)
+  }
+  print(x)
+  p1 <- mean(x)
+  n <- length(x)
+  q <- qnorm(p=1-alfa)
+  #Achando a Regiao Critica
+  p.c <- p0+q*sqrt(p0*(1-p0))/sqrt(n)
+  #Determinando se rejeita ou nao 
+  cat("Valor observado:",p1,"\n","Regiao cirtica=[",p.c,":1]","\n")
+  if (p1>p.c){
+    cat("Rejeito a hipotese nula
+        ,ou seja,a media dos peso e superior a 70Kg")
+  }
+  else if (p1<p.c){
+    cat("Nao rejeito a hipotese nula,
+        ou seja,a media dos peso e inferior ou igual a 70Kg")
+  }}
+base1 <- base %>% filter(Sexo=="Mulher")
+TH.prop(x=base1$Peso,alfa=0.05,p0=0.65,h=70)
+```
+<span style="color:red">**Outra ideia para resolver a questao**</span>
+```{r}
+TH.prop2=function(x,alfa,p0,h){
+  #Determinando a proporcao observada.
+  y <- ifelse(x>h,1,0)
+  p1 <- mean(y)
+  n <- length(y)
+  #Achando a Regiao Critica.
+  p.c <- qnorm(p=1-alfa,mean=p0,sd=sqrt(p0*(1-p0))/sqrt(n))
+  #Determinando se rejeita ou nao.
+  cat("Valor observado:",p1,"\n","Regiao cirtica=[",p.c,":1]","\n")
+  if (p1>p.c){
+    cat("Rejeito a hipotese nula,ou seja,a media dos peso e superior a 70Kg")
+  }
+  else if (p1<p.c){
+    cat("Nao rejeito a hipotese nula,ou seja,a media dos peso 
+        e inferior ou igual a 70Kg")
+  }
+}
+base1 <- base %>% filter(Sexo=="Mulher")
+TH.prop2(x=base1$Peso,alfa=0.05,p0=0.65,h=70)
+```
+
+<span style="color:red">**Calculando o P-Valor**</span> 
+```{r}
+pvalor=function(x,alfa,h,p0){
+  y <- ifelse(x>h,1,0)
+  p1 <- mean(y)
+  n <- length(y)
+  #Calculando o p-valor.
+  pv <- pnorm(q=p1,mean=p0,sd=sqrt(p0*(1-p0)/n),lower.tail=FALSE)
+  cat("p-valor e:",pv,"\n")
+  #Determinando se rejeito ou nao.
+  if (alfa>pv){
+    cat("Rejeitamos Ho, para im nivel de significancia:",alfa)
+  }
+  else if (alfa<pv){
+    cat("Nao rejeitamos Ho, para im nivel de significancia:",alfa)
+  }
+}
+pvalor(x=base1$Peso,p0=0.65,h=70,alfa=0.05)
+```
+Note que para qualquer nivel de significancia aceitavel temos que p-valor>alfa
+,ou seja, nao reijeitamos a hipotese nula para qualquer nivel de significancia
+aceitavel
+
+#Questao 4
+
+### a)
+```{r}
+base1 <- base %>% filter(Sexo=="Homem")
+t.test(base1$Peso, alternative = "greater", mu = 70,conf.level=0.95)
+#Como alfa e maior que p-valor rejeitamos Ho,ou seja
+#, ha evidencias que a media dos pesos e maior que 70Kg
+```
+
+<span style="color:red">Outra ideia para resolver a questao usando funcoes do R</span>
+```{r}
+base1 <- base %>% filter(Sexo=="Homem")
+valor=function(alfa){
+  conf <- 1-alfa
+  p <- t.test(base1$Peso, alternative = "greater", mu = 70,conf.level=0.95)[[3]]
+  cat("P-valor e:",p,"\n")
+  if (p>alfa){
+    cat("Como p-valor e maior do que alfa nao rejeitamos Ho
+        ,ou seja, ha evidencias que a media das idades e maior ou igual que 70 Kg")
+  }
+  else if (p<alfa){
+    cat("Como p-valor e menor do que alfar rejeitamos Ho
+        ,ou seja, ha evidencias que a media das idades e menor que 70 Kg")
+  }
+}
+```
+
+### b)
+```{r}
+base1 <- base %>% filter(Sexo=="Homem")
+t.test(base1$Idade, alternative = "less", mu = 30,conf.level=0.99)
+#Como alfa e menor que p-valor nao rejeitamos Ho
+#,ou seja, ha evidencias que a media das idades e maior ou igual que 30 anos
+```
+
+<span style="color:red">Outra ideia para resolver a questao usando funcoes do R</span>
+```{r}
+base2 <- base %>% filter(Sexo=="Homem")
+valor=function(alfa){
+  conf <- 1-alfa
+  p <- t.test(base2$Idade, alternative = "less", mu = 30,conf.level=conf)[[3]]
+  cat("P-valor e:",p,"\n")
+  if (p>alfa){
+    cat("Como p-valor e maior do que alfa nao rejeitamos Ho
+        ,ou seja, ha evidencias que a media das idades e maior ou igual que 30 anos")
+  }
+  else if (p<alfa){
+    cat("Como p-valor e menor do que alfar rejeitamos Ho
+        ,ou seja, ha evidencias que a media das idades e menor que 30 anos")
+  }
+}
+valor(alfa=0.01)
+```
+
+### c)
+```{r}
+base3 <- base %>% filter(Sexo=="Mulher")
+t.test(base3$Idade,alternative="two.sided",conf.level=0.97,mu=20)
+#Como alfa e maior que p-valor rejeitamos Ho
+#,ou seja, ha evidencias que a media das idades e diferente de 20 anos
+```
+
+<span style="color:red">Outra ideia para resolver a questao usando funcoes do R</span>
+```{r}
+base3 <- base %>% filter(Sexo=="Mulher")
+valor=function(alfa){
+  conf <- 1-alfa
+  p <- t.test(base3$Idade,alternative="two.sided",conf.level=0.97,mu=20)[[3]]
+  cat("P-valor e:",p,"\n")
+  if (p>alfa){
+    cat("Como p-valor e maior do que alfa nao rejeitamos Ho
+        ,ou seja, ha evidencias que a media das idades e maior ou igual que 30 anos")
+  }
+  else if (p<alfa){
+    cat("Como p-valor e menor do que alfar rejeitamos Ho
+        ,ou seja, ha evidencias que a media das idades e difentente de 20 anos")
+  }
+}
+valor(alfa=0.01)
+```
+
+### d)
+```{r}
+base1 <- base %>% filter(Sexo=="Mulher")
+proporcao <- ifelse(base1$Peso>70,1,0)
+prop.test(sum(proporcao), length(proporcao), alternative = "greater", p = 0.65, correct = FALSE,conf.level=0.95)
+#Para qualquer nivel de significancia aceitavel temos que p-valor>alfa
+#,ou seja, nao reijeitamos a hipotese nula para qualquer nivel de significancia 
+#aceitavel
+```
+
+<span style="color:red">Outra ideia para resolver a questao usando funcoes do R</span>
+```{r}
+base4 <- base %>% filter(Sexo=="Mulher")
+valor=function(alfa){
+  conf <- 1-alfa
+  p <- t.test(base4$Idade,alternative="two.sided",conf.level=0.97,mu=20)[[3]]
+  cat("P-valor e:",p,"\n")
+  cat("Para qualquer nivel de significancia aceitavel temos que p-valor>alfa
+      ou seja, nao reijeitamos a hipotese nula para qualquer nivel de significancia
+      aceitavel")
+}
+valor(alfa=0.01)
+```
+
+
+#Questao 5
+Erro Tipo 2 para TH unilateral a direita para proporcao.  
+<p style="text-align: center;">$H_{0}:p=p_{0}$ vs $H_{1}:p>p_{0}$</p>
+$\beta(p)=P(\widehat{P}\notin RC|p)=P(\widehat{P}>p.c | p)$
+```{r}
+ET2prop=function(x,alfa,p0,p){
+  n <- length(x)
+  #Determinando a Regiao Critica.
+  z <- qnorm(1-alfa)
+  p.c <- p0+sqrt(p0*(1-p0))*z/sqrt(n)
+  #Determinando a prob do erro tipo II.
+  p <- (p.c-p)*sqrt(n)/sqrt(p*(1-p))
+  prob <- pnorm(p)
+  cat("Probabilidade de erro tipo II e;",prob)
+}
+a <- rnorm(20)
+ET2prop(x=a,alfa=0.05,p0=0.5,p=0.5)
+ET2prop(x=a,alfa=0.1,p0=0.3,p=0.3)
+```
+
+#Questao 6
+Funcao Poder para TH bilateral para proporcao. 
+<p style="text-align: center;">$H_{0}:p=p_{0}$ vs $H_{1}:p\neq p_{0}$  </p>
+$\pi(p)=P(\widehat{P}\in R.C |p)=P(\widehat{P}>p.c_{1}$ ou $\widehat{P}<p.c_{2}$ $|p)=P(\widehat{P}>p.c_{1}|p)+P(\widehat{P}<p.c_{2}|p)$
+```{r}
+PoderBi=function(x,alfa,p0,p){
+  n <- length(x)
+  #Determinando a Regiao Critica
+  z1 <- qnorm(1-alfa/2)
+  z2 <- qnorm(alfa/2)
+  p <- ifelse(p>=0&p<=1,p,1)
+  p.c1 <-p0+sqrt(p0*(1-p0)/n)*z1
+  p.c2 <-p0+sqrt(p0*(1-p0)/n)*z2
+  #Achando a funcao poder
+  p1 <- pnorm(p.c2,mean=p,sd=sqrt(p*(1-p)/n))
+  p2 <- pnorm(p.c1,mean=p,sd=sqrt(p*(1-p)/n),lower.tail=F)
+  prob <- p1+p2
+  return(prob)
+}
+```
+```{r,echo=FALSE}
+x <- rnorm(10,0.5,0.3)
+PoderBi(x,alfa=0.01,p0=0.6,p=3)
+PoderBi(x,alfa=0.01,p0=0.6,p=0.6)
+curve(PoderBi(x,alfa=0.01,p0=0.6,x),-0.5,1.5
+      ,ylab=expression(beta(p)),xlab=expression(p))
+```
+
