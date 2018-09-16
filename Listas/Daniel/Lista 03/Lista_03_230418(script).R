@@ -156,7 +156,7 @@ plot(q9cVal,q9cProb,type = 'h')
   acumQ9c <- acum
   rm(list = c('acum','temp','i'))
 }
-plot(acum,type = 's')
+plot(acumQ9c,type = 's')
 # Questao 10 ###################################################################
 q10Amostra <- rexp(1000,5)
 hist(q10Amostra)
