@@ -141,7 +141,7 @@ plot(ppois(-5:25,5), type = 's')
 par(mfrow = c(1,1))
 #c
 # Dist
-q9cVal <- 1:7
+q9cVal <- 1:9
 q9cProb <- c(0,5/100,35/100,15/100,5/100,20/100,15/100,5/100,0)
 plot(q9cVal,q9cProb,type = 'h')
 # Acumulada
