@@ -8,6 +8,6 @@ Essas foram as listas feitas por alunos enquanto cursavam métodos computacionai
 Sempre, sempre, SEMPRE tente fazer os exercícios antes de checar como foram feitos aqui! A sua ideia pode ser melhor que a minha, até porque sou um pouco preguiçoso. Agora, se não conseguir sair de alguma questão, dá uma olhadinha!
 
 ### Não sei usar o GIT! E agora?
-Aprenda! Git e Github são, a nível básico como um passeio em um parque florido. É algo bem simples que pode facilitar muito a sua vida para realizar trabalhos em grupo e realizar processos paralelo sempre mantendo o controle de versão do que foi feito. Não necessariamente um pré requisito para um estatístico mas vai ajudar muito!
+Aprenda! Git e Github são, a nível básico como um passeio em um parque florido. É algo bem simples que pode facilitar muito a sua vida para realizar trabalhos em grupo e realizar processos paralelo sempre mantendo o controle de versão do que foi feito. Não necessariamente um pré requisito para é um estatístico mas vai ajudar muito!
 
 https://terminalroot.com.br/git/ esse artigo explica de maneira bem simples o que é o git!
