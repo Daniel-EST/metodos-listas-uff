@@ -11,3 +11,7 @@ Sempre, sempre, SEMPRE tente fazer os exercícios antes de checar como foram fei
 Aprenda! Git e Github são, a nível básico como um passeio em um parque florido. É algo bem simples que pode facilitar muito a sua vida para realizar trabalhos em grupo e realizar processos paralelo sempre mantendo o controle de versão do que foi feito. Não necessariamente um pré requisito para é um estatístico mas vai ajudar muito!
 
 https://terminalroot.com.br/git/ esse artigo explica de maneira bem simples o que é o git!
+
+Aliás, uma recomendação. Eu fiquei meio sem tempo de ficar colocando o material dos meus estudos aqui mas o meu grande amigo Lyncoln esta mantendo material das últimas matérias no curso no [GIT dele que você pode ver clicando aqui, nesta frase toda](https://github.com/Lyncoln/UFF).
+
+Bye bye!
