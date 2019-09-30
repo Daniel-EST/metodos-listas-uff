@@ -12,6 +12,7 @@ Aprenda! Git e Github são, a nível básico como um passeio em um parque florid
 
 https://terminalroot.com.br/git/ esse artigo explica de maneira bem simples o que é o git!
 
-Aliás, uma recomendação. Eu fiquei meio sem tempo de ficar colocando o material dos meus estudos aqui mas o meu grande amigo Lyncoln esta mantendo material das últimas matérias no curso no [GIT dele que você pode ver clicando aqui, nesta frase toda](https://github.com/Lyncoln/UFF).
+### Dicas!
+Aliás, uma recomendação. Eu fiquei meio sem tempo de ficar colocando o material dos meus estudos aqui mas o meu grande amigo Lyncoln esta mantendo material das últimas matérias do curso no [GIT dele que você pode ver clicando aqui, nesta frase toda](https://github.com/Lyncoln/UFF).
 
 Bye bye!
